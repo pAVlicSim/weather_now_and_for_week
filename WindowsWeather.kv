@@ -1,0 +1,101 @@
+<Widget>
+    font_size: dp(25)
+    font_name: 'fonts/Libertinus/LibertinusSerif-BoldItalic.otf'
+
+<ModalHistory>
+    id: modal_history
+    weather_button: weather_button
+    BoxLayout:
+        orientation: 'vertical'
+        Button:
+            id: weather_button
+            text: 'Погода'
+            on_press: app.root.manager.get_screen('now').update_weather_from_history(self.text)
+        Button:
+            text: 'Удалить из списка'
+        Button:
+            text: 'Закрыть'
+            on_release: root.close_modal()
+
+<CityNameButton>:
+    on_press: self.modal_window(self.text)
+
+<HistoryRV>:
+    viewclass: 'CityNameButton'
+    RecycleBoxLayout:
+        spacing: dp(1)
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+
+
+<History>:
+    history_rv: history_rv
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'История'
+            size_hint_y: None
+            size: dp(100), dp(60)
+
+        BoxLayout:
+            size_hint: 1, 1
+            HistoryRV:
+                id: history_rv
+        Button:
+            size_hint: None, None
+            size: dp(250), dp(60)
+            text: 'Погода на неделю'
+            on_press: root.manager.current = 'week'
+
+
+<WeatherWeek>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        Label:
+            text: 'Погода на неделю.'
+        Button:
+            text: 'Погода сейчас'
+            size_hint: None, None
+            size: dp(250), dp(60)
+            on_press: root.manager.current = 'now'
+
+
+<WeatherNow>:
+    id:weather_now
+    search_city: search_city
+    weather_label: weather_label
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(10)
+        spacing: dp(10)
+        BoxLayout:
+            size_hint_y: None
+            size: dp(100), dp(45)
+            TextInput:
+                id: search_city
+                multiline: False
+                size_hint: .6, 1
+            Button:
+                text: 'Поиск'
+                size_hint:.15, 1
+                on_press:
+                    root.update_weather()
+                on_release:
+                    root.manager.get_screen('source').ids.history_rv.update_rv(search_city.text)
+        Label:
+            size_hint_y: None
+            size: dp(100), dp(60)
+            text: 'Погода сейчас'
+        Label:
+            id: weather_label
+            text: 'Здесь будет\n показана погода\n по вашему выбору.'
+        Button:
+            size_hint: None, None
+            size: dp(100), dp(60)
+            text: 'Поиск'
+            on_press: root.manager.current = 'source'

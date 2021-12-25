@@ -1,18 +1,68 @@
-<Widget>
+# from kivy_garden.graph import Graph, Plot
+
+
+<Widget>:
     font_size: dp(25)
     font_name: 'fonts/Libertinus/LibertinusSerif-BoldItalic.otf'
 
-<ModalHistory>
+<Graph>:
+    font_size: dp(20)
+    font_name: 'fonts/Libertinus/LibertinusSerif-BoldItalic.otf'
+
+<WeekLabel@Label>:
+    size_hint: None, None
+    width: dp(300)
+    height: self.texture_size[1]
+    text_size: self.width, None
+
+<IconImage@Image>:
+    size_hint: None, None
+    width: dp(300)
+    height: dp(150)
+
+<Label>:
+    color: 0, 0, 0, 1
+
+<Button>:
+    background_normal: ''
+    background_color: .85, 1, .6, 1
+#    canvas.before:
+#        Color:
+#            rgba: .85, 1, .6, 1
+#        Rectangle:
+#            pos: self.pos
+#            size: self.size
+
+
+<Screen>:
+    background_color: .849564, 1, .46, 1
+    canvas.before:
+        Color:
+            rgba: root.background_color
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<ModalHistory>:
     id: modal_history
     weather_button: weather_button
     BoxLayout:
         orientation: 'vertical'
+        spacing: 2
         Button:
             id: weather_button
-            text: 'Погода'
-            on_press: app.root.manager.get_screen('now').update_weather_from_history(self.text)
+            text:
+            on_press:
+                app.root.get_screen('now').update_weather_from_history(root.city_name)
+                app.root.get_screen('week').update_weather()
+                app.root.get_screen('graphs').update_weather()
+            on_release:
+                root.close_modal()
+                app.root.current = 'now'
         Button:
             text: 'Удалить из списка'
+            on_press: app.root.get_screen('history').ids.history_rv.update_rv(root.city_name, False)
+            on_release: root.close_modal()
         Button:
             text: 'Закрыть'
             on_release: root.close_modal()
@@ -44,35 +94,142 @@
             size_hint: 1, 1
             HistoryRV:
                 id: history_rv
-        Button:
-            size_hint: None, None
-            size: dp(250), dp(60)
-            text: 'Погода на неделю'
-            on_press: root.manager.current = 'week'
+        BoxLayout:
+            size_hint_y: None
+            size: 1, dp(50)
+            Button:
+                size_hint: None, None
+                size: dp(250), dp(48)
+                text: 'Погода на неделю'
+                on_press: root.manager.current = 'week'
+            Splitter:
+                horizontal_margins: True
+            Button:
+                text: 'Графики'
+                size_hint: None, None
+                size: dp(250), dp(48)
+                on_press: root.manager.current = 'graphs'
 
 
 <WeatherWeek>:
+    city_in_week: city_in_week
+    day0: day0
+    day1: day1
+    day2: day2
+    day3: day3
+    day4: day4
+    day5: day5
+    day6: day6
+    day7: day7
+    icon_0: icon_0
+    icon_1: icon_1
+    icon_2: icon_2
+    icon_3: icon_3
+    icon_4: icon_4
+    icon_5: icon_5
+    icon_6: icon_6
+    icon_7: icon_7
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(10)
-        spacing: dp(10)
         Label:
-            text: 'Погода на неделю.'
-        Button:
-            text: 'Погода сейчас'
-            size_hint: None, None
-            size: dp(250), dp(60)
-            on_press: root.manager.current = 'now'
+            id: city_in_week
+            text:
+            size_hint_y: None
+            size: dp(0), dp(50)
+        ScrollView:
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: None, None
+                width: self.minimum_width
+                height: self.minimum_height
+                BoxLayout:
+                    spacing: 2
+                    size_hint: None, None
+                    width: self.minimum_width
+                    height: self.minimum_height
+                    IconImage:
+                        id: icon_0
+                        allow_stretch: True
+                        keep_ratio: False
+                    IconImage:
+                        id: icon_1
+                        allow_stretch: True
+                        keep_ratio: False
+                    IconImage:
+                        id: icon_2
+                        allow_stretch: True
+                        keep_ratio: False
+                    IconImage:
+                        id: icon_3
+                        allow_stretch: True
+                        keep_ratio: False
+                    IconImage:
+                        id: icon_4
+                        allow_stretch: True
+                        keep_ratio: False
+                    IconImage:
+                        id: icon_5
+                        allow_stretch: True
+                        keep_ratio: False
+                    IconImage:
+                        id: icon_6
+                        allow_stretch: True
+                        keep_ratio: False
+                    IconImage:
+                        id: icon_7
+                        allow_stretch: True
+                        keep_ratio: False
+                BoxLayout:
+                    spacing: 2
+                    size_hint: None, None
+                    width: self.minimum_width
+                    height: self.minimum_height
+                    WeekLabel:
+                        id: day0
+                        text: 'сегодня'
+                    WeekLabel:
+                        id: day1
+                        text: 'день\nвторой'
+                    WeekLabel:
+                        id: day2
+                        text: 'день\nтретий'
+                    WeekLabel:
+                        id: day3
+                        text: 'день\nчетвёртый'
+                    WeekLabel:
+                        id: day4
+                        text: 'день\nпятый'
+                    WeekLabel:
+                        id: day5
+                        text: 'день\nшестой'
+                    WeekLabel:
+                        id: day6
+                        text: 'день\nседьмой'
+                    WeekLabel:
+                        id: day7
+                        text: 'день\nвосьмой'
+        BoxLayout:
+            size_hint_y: None
+            size: 1, dp(50)
+            Button:
+                text: 'Графики'
+                size_hint: None, None
+                size: dp(250), dp(48)
+                on_press: root.manager.current = 'graphs'
+            Splitter:
+                horizontal_margins: True
+            Button:
+                text: 'История'
+                size_hint: None, None
+                size: dp(250), dp(48)
+                on_press: root.manager.current = 'history'
 
 
 <WeatherNow>:
-    id:weather_now
     search_city: search_city
     weather_label: weather_label
     BoxLayout:
         orientation: 'vertical'
-        padding: dp(10)
-        spacing: dp(10)
         BoxLayout:
             size_hint_y: None
             size: dp(100), dp(45)
@@ -84,9 +241,11 @@
                 text: 'Поиск'
                 size_hint:.15, 1
                 on_press:
-                    root.update_weather()
+                    root.update_weather_from_search()
+                    app.root.get_screen('week').update_weather()
+                    app.root.get_screen('graphs').update_weather()
                 on_release:
-                    root.manager.get_screen('source').ids.history_rv.update_rv(search_city.text)
+                    root.manager.get_screen('history').ids.history_rv.update_rv(search_city.text, True)
         Label:
             size_hint_y: None
             size: dp(100), dp(60)
@@ -94,8 +253,52 @@
         Label:
             id: weather_label
             text: 'Здесь будет\n показана погода\n по вашему выбору.'
-        Button:
-            size_hint: None, None
-            size: dp(100), dp(60)
-            text: 'Поиск'
-            on_press: root.manager.current = 'source'
+            canvas.before:
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                    source: 'icons/icon_weather.jpg'
+        BoxLayout:
+            size_hint_y: None
+            size: 10, dp(50)
+            Button:
+                size_hint: None, None
+                size: dp(150), dp(48)
+                text: 'История'
+                on_press: root.manager.current = 'history'
+            Splitter:
+                horizontal_margins: True
+            Button:
+                size_hint: None, None
+                size: dp(250), dp(48)
+                text: 'Погода на неделю'
+                on_press: root.manager.current = 'week'
+
+
+<WeatherGraphs>:
+    temp_graph: temp_graph
+    press_graph: press_graph
+    graph_box: graph_box
+    BoxLayout:
+        id: graph_box
+        orientation: 'vertical'
+        Graph:
+            id: temp_graph
+        Graph:
+            id: press_graph
+        BoxLayout:
+            size_hint_y: None
+            size: 10, dp(50)
+            Button:
+                size_hint: None, None
+                size: dp(150), dp(48)
+                text: 'История'
+                on_press: root.manager.current = 'history'
+            Splitter:
+                horizontal_margins: True
+            Button:
+                size_hint: None, None
+                size: dp(250), dp(48)
+                text: 'Погода сейчас'
+                on_press: root.manager.current = 'now'
+

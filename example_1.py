@@ -14,7 +14,7 @@ items = [
 
 class MyButton(Button):
 
-    def print_data(self, data):
+    def print_data(data):
         print(data)
 
 
